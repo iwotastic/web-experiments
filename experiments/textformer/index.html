@@ -1,0 +1,340 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Text-former</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+<style>
+.vert-re {
+	resize: vertical;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="page-header">
+<h1>Text-former <small>The simple text effect applier.</small></h1>
+</div>
+<div class="form-group">
+<label for="text" class="control-label">Enter Text Here</label>
+<textarea id="text" class="form-control vert-re" rows="3"></textarea>
+</div>
+<div class="form-group">
+<label for="filters" class="control-label">Choose Text Transform</label>
+<select id="filters" class="form-control">
+<optgroup label="Plain Text">
+<option value="upCase">Upper Case</option>
+<option value="lowCase">Lower Case</option>
+<option value="moron">Moronify</option>
+<option value="leet">"1337" Speak</option>
+<option value="reverse">Reverse</option>
+<option value="altCase">Alternate Case</option>
+</optgroup>
+<optgroup label="HTML">
+<option value="zigzag">Zig-Zag</option>
+<option value="balls">Balls</option>
+<option value="reverse2">Reverse (Improved)</option>
+<option value="festive">Festive</option>
+<option value="formatRainbow">Formating Rainbow</option>
+<option value="rainbow">Rainbow</option>
+</optgroup>
+<optgroup label="BBCode">
+<option value="festiveBB">Festive</option>
+<option value="formatRainbowBB">Formating Rainbow</option>
+<option value="smallCapsBB1">Small Caps 1</option>
+<option value="smallCapsBB2">Small Caps 2</option>
+<option value="smallCapsBB3">Small Caps 3</option>
+</optgroup>
+</select>
+</div>
+<div class="form-group">
+<label for="out" class="control-label">Output of Tranform</label>
+<textarea id="out" class="form-control vert-re" rows="3" readonly></textarea>
+</div>
+<h3>HTML Preview:</h3>
+<div class="well" id="htmlOut"></div>
+<p class="text-right"><a href="/">Main Site</a> | <a href="about.html">About This Site</a></p>
+</div>
+<script>
+var didSetFilter = false
+function sanatize(html) {
+	return html.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+function hueToHex(hue) {
+	if (hue < 256) {
+		return rgbToHex(255 - hue, hue, 0);
+	}else if (hue < 511) {
+		return rgbToHex(0, 510 - hue, hue - 255);
+	}else if (hue < 765) {
+		return rgbToHex(hue - 510, 0, 765 - hue);
+	}
+}
+function rgbToHex(r, g, b) {
+	var colNum = (r * 65536) + (g * 256) + b;
+	var hexValue = Math.floor(colNum).toString(16);
+	for (var i = hexValue.length; i < 6; i++) {
+		hexValue = "0" + hexValue;
+	}
+	return "#" + hexValue;
+}
+var filters = [
+	{name: "upCase", operation: function(text){
+		return [text.toUpperCase(), sanatize(text.toUpperCase()).replace(/\n/g, "<br>")];
+	}},
+	{name: "lowCase", operation: function(text){
+		return [text.toLowerCase(), sanatize(text.toLowerCase()).replace(/\n/g, "<br>")];
+	}},
+	{name: "moron", operation: function(text){
+		var txt = text.toLowerCase().replace(/\?/g, ".").replace(/!/g, "!!!")
+		return [txt, sanatize(txt).replace(/\n/g, "<br>")];
+	}},
+	{name: "leet", operation: function(text){
+		var txt = text.replace(/cker/gi, "x0r").replace(/ate/gi, "8").replace(/e/gi, "3").replace(/l/gi, "1").replace(/t/gi, "7").replace(/s/gi, "$").replace(/o/gi, "0")
+		return [txt, sanatize(txt).replace(/\n/g, "<br>")];
+	}},
+	{name: "reverse", operation: function(text){
+		var rev = "";
+		for (var i = 0; i < text.length; i++) {
+			rev = text.charAt(i) + rev;
+		}
+		return [rev, sanatize(rev).replace(/\n/g, "<br>")];
+	}},
+	{name: "altCase", operation: function(text){
+		var txt = "";
+		for (var i = 0; i < text.length; i++) {
+			txt = txt + (i % 2 === 1 ? text.charAt(i).toUpperCase() : text.charAt(i).toLowerCase());
+		}
+		return [txt, sanatize(txt).replace(/\n/g, "<br>")];
+	}},
+	{name: "zigzag", operation: function(text){
+		var txt = "";
+		var waveNum = 0;
+		var inc = true;
+		for (var i = 0; i < text.length; i++) {
+			if (text.charAt(i) == " ") {
+				txt = txt + " ";
+			}else if (text.charAt(i) == "\n") {
+				txt = txt + "\n";
+			}else{
+				txt = txt + "<span style=\"display: inline-block; height: 30px;\"><div style=\"margin: none; position: relative; top: " + (waveNum * 5) + "px;\">" + sanatize(text.charAt(i)) + "</div></span>";
+			}
+			if (waveNum == 5 && inc) {
+				inc = false;
+				waveNum = 4;
+			}else if (waveNum == 0 && !inc) {
+				inc = true;
+				waveNum = 1;
+			}else if (inc) {
+				waveNum += 1
+			}else if (!inc) {
+				waveNum -= 1
+			}
+		}
+		return [txt.replace(/\n/g, "<br>"), txt.replace(/\n/g, "<br>")];
+	}},
+	{name: "balls", operation: function(text){
+		var txt = "";
+		for (var i = 0; i < text.length; i++) {
+			if (text.charAt(i) == " ") {
+				txt = txt + "<code> </code>";
+			}else if (text.charAt(i) == "\n") {
+				txt = txt + "\n";
+			}else{
+				txt = txt + "<span style=\"display: inline-block; height: 30px; width: 30px; padding: 1px;\"><div style=\"margin: none; width: 28px; height: 28px; text-align: center; pading: 7px; border-radius: 25px; background: black; color: white;\">" + sanatize(text.charAt(i)) + "</div></span>";
+			}
+		}
+		return [txt.replace(/\n/g, "<br>"), txt.replace(/\n/g, "<br>")];
+	}},
+	{name: "reverse2", operation: function(text){
+		var txt = "";
+		for (var i = 0; i < text.length; i++) {
+			txt = (text.charAt(i) != "\n" ? "<span style=\"display: inline-block; padding: none;\"><div style=\"margin: none; padding: none;-webkit-transform: rotateY(180deg); transform: rotateY(180deg);\">" + sanatize(text.charAt(i)) + "</div></span>" : "\n") + txt;
+		}
+		return [txt.replace(/\n/g, "<br>"), txt.replace(/\n/g, "<br>")];
+	}},
+	{name: "festive", operation: function(text){
+		var txt = "";
+		for (var i = 0; i < text.length; i++) {
+			txt = txt + (text.charAt(i) != "\n" ? "<span style=\"color: " + (i % 2 === 1 ? "#1618e0" : "rgb(224, 36, 36)") + ";\">" + sanatize(text.charAt(i)) + "</span>" : "\n");
+		}
+		return [txt.replace(/\n/g, "<br>"), txt.replace(/\n/g, "<br>")];
+	}},
+	{name: "formatRainbow", operation: function(text){
+		var txt = "";
+		for (var i = 0; i < text.length; i++) {
+			var n = "";
+			if (text.charAt(i) == "\n") {
+				n = "\n";
+			}else{
+				if (i % 3 == 0) {
+					n = sanatize(text).charAt(i);
+				}else if (i % 3 == 1) {
+					n = "<i>" + sanatize(text.charAt(i)) + "</i>";
+				}else if (i % 3 == 2) {
+					n = "<b>" + sanatize(text.charAt(i)) + "</b>";
+				}
+			}
+			txt = txt + n;
+		}
+		return [txt.replace(/\n/g, "<br>"), txt.replace(/\n/g, "<br>")];
+	}},
+	{name: "rainbow", operation: function(text){
+		var txt = "";
+		var incBy = 360 / text.length;
+		var hue = 0;
+		for (var i = 0; i < text.length; i++) {
+			var n = "";
+			if (text.charAt(i) == "\n") {
+				n = "\n";
+			}else if (text.charAt(i) == " ") {
+				n = " ";
+			}else{
+				n = "<span style=\"color:hsl(" + hue + ",100%,50%)\">" + sanatize(text.charAt(i)) + "</span>";
+				hue += incBy;
+			}
+			txt = txt + n;
+		}
+		return [txt.replace(/\n/g, "<br>"), txt.replace(/\n/g, "<br>")];
+	}},
+	{name: "festiveBB", operation: function(text){
+		var txt = "";
+		for (var i = 0; i < text.length; i++) {
+			txt = txt + (text.charAt(i) != "\n" ? "[color=" + (i % 2 === 1 ? "#1618e0" : "#e02424") + "]" + text.charAt(i) + "[/color]" : "\n");
+		}
+		return [txt, sanatize(txt).replace(/\n/g, "<br>")];
+	}},
+	{name: "formatRainbowBB", operation: function(text){
+		var txt = "";
+		for (var i = 0; i < text.length; i++) {
+			var n = "";
+			if (text.charAt(i) == "\n") {
+				n = "\n";
+			}else{
+				if (i % 3 == 0) {
+					n = text.charAt(i);
+				}else if (i % 3 == 1) {
+					n = "[i]" + text.charAt(i) + "[/i]";
+				}else if (i % 3 == 2) {
+					n = "[b]" + text.charAt(i) + "[/b]";
+				}
+			}
+			txt = txt + n;
+		}
+		return [txt, sanatize(txt).replace(/\n/g, "<br>")];
+	}},
+	{name: "smallCapsBB1", operation: function(text){
+		var txt = "";
+		for (var i = 0; i < text.length; i++) {
+			var n = "";
+			if (text.charAt(i) == "\n") {
+				n = "\n";
+			}else{
+				if (/[A-Z]/.test(text.charAt(i))) {
+					n = "[big]" + text.charAt(i) + "[/big]";
+				}else{
+					n = text.charAt(i).toUpperCase();
+				}
+			}
+			txt = txt + n;
+		}
+		return [txt, sanatize(txt).replace(/\n/g, "<br>")];
+	}},
+	{name: "smallCapsBB2", operation: function(text){
+		var txt = "";
+		for (var i = 0; i < text.length; i++) {
+			var n = "";
+			if (text.charAt(i) == "\n") {
+				n = "\n";
+			}else{
+				if (/[A-Z]/.test(text.charAt(i))) {
+					n = text.charAt(i);
+				}else{
+					n = "[small]" + text.charAt(i).toUpperCase() + "[/small]";
+				}
+			}
+			txt = txt + n;
+		}
+		return [txt, sanatize(txt).replace(/\n/g, "<br>")];
+	}},
+	{name: "smallCapsBB3", operation: function(text){
+		var txt = "";
+		for (var i = 0; i < text.length; i++) {
+			var n = "";
+			if (text.charAt(i) == "\n") {
+				n = "\n";
+			}else{
+				if (/[A-Z]/.test(text.charAt(i))) {
+					n = "[big]" + text.charAt(i) + "[/big]";
+				}else{
+					n = "[small]" + text.charAt(i).toUpperCase() + "[/small]";
+				}
+			}
+			txt = txt + n;
+		}
+		return [txt, sanatize(txt).replace(/\n/g, "<br>")];
+	}}
+]
+document.getElementById("text").addEventListener("keyup", function(e){
+	var text = e.target.value;
+	var filter = document.getElementById("filters").value;
+	var res = "";
+	var htmlPrev = "";
+	for (var i = 0; i < filters.length; i++) {
+		if (filters[i].name == filter) {
+			res = filters[i].operation(text)[0];
+			htmlPrev = filters[i].operation(text)[1]
+			break;
+		}
+	}
+	document.getElementById("out").value = res;
+	document.getElementById("htmlOut").innerHTML = htmlPrev;
+});
+document.getElementById("filters").addEventListener("change", function(e){
+	location.hash = "#" + e.target.value;
+	var text = document.getElementById("text").value;
+	var filter = e.target.value;
+	var res = "";
+	var htmlPrev = "";
+	for (var i = 0; i < filters.length; i++) {
+		if (filters[i].name == filter) {
+			res = filters[i].operation(text)[0];
+			htmlPrev = filters[i].operation(text)[1];
+			break;
+		}
+	}
+	document.getElementById("out").value = res;
+	document.getElementById("htmlOut").innerHTML = htmlPrev;
+});
+document.getElementById("out").addEventListener("mousedown", function(e){
+	e.preventDefault();
+	e.target.select();
+});
+document.addEventListener("load", function(e){
+	if (location.hash != "" && location.hash != "#") {
+		var tHash = location.hash.substr(1, location.hash.length);
+		for (var i = 0; i < filters.length; i++) {
+			if (filters[i].name == tHash) {
+				document.getElementById("filters").value = filters[i].name;
+				break;
+			}
+		}
+	}
+});
+window.addEventListener("hashchange", function(e){
+	if (didSetFilter) {
+		didSetFilter = false;
+	}else{
+		if (location.hash != "" && location.hash != "#") {
+			var tHash = location.hash.substr(1, location.hash.length);
+			for (var i = 0; i < filters.length; i++) {
+				if (filters[i].name == tHash) {
+					document.getElementById("filters").value = filters[i].name;
+					break;
+				}
+			}
+		}
+	}
+});
+</script>
+</body>
+</html>

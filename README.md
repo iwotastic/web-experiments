@@ -1,0 +1,2 @@
+# Ian's Web Experiments
+This is a quasi-monorepo for all of my one-off frontend web development experiments. It also contains scripts to build [web-experiments.ianmorrill.com](https://web-experiments.ianmorrill.com), which is a compilation of all of the experiments in this repo.
