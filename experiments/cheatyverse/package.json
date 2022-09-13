@@ -4,7 +4,7 @@
   "description": "An interactive cheatsheet for the Tidyverse R packages.",
   "scripts": {
     "start": "parcel src/index.html",
-    "build": "parcel build src/index.html"
+    "build": "parcel build --public-url /cheatyverse src/index.html"
   },
   "author": "Ian Morrill",
   "license": "MIT",
