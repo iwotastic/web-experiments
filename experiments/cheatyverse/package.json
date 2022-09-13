@@ -2,7 +2,6 @@
   "name": "cheatyverse",
   "version": "1.0.0",
   "description": "An interactive cheatsheet for the Tidyverse R packages.",
-  "main": "index.js",
   "scripts": {
     "start": "parcel src/index.html",
     "build": "parcel build src/index.html"
