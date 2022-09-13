@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import { version } from "../package.json";
 
 export function Homepage() {
     return <div>
@@ -18,11 +17,11 @@ export function Homepage() {
             )}
         </p>
         <ul>
-            <li><Link to="/scatterplot">I want to make a Scatterplot</Link></li>
+            <li><Link to="/scatterplot">I want to make a scatterplot</Link></li>
+            <li><Link to="/line-plot">I want to make a line plot</Link></li>
+            <li><Link to="/bar-chart">I want to make a bar chart</Link></li>
+            <li><Link to="/histogram">I want to make a histogram</Link></li>
+            <li><Link to="/box-plot">I want to make a box plot</Link></li>
         </ul>
-        <hr />
-        <p>
-            Cheatyverse v{version}. A Web Experiment by <a href="https://ianmorrill.com">Ian Morrill</a>.
-        </p>
     </div>;
 }
