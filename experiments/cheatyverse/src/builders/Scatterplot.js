@@ -22,14 +22,14 @@ export function Scatterplot() {
         <Question label={"What variable should be used to determine color?"} value={colorVar} onNewValue={setColorVar} />
         <Question label={"What variable should be used to determine size?"} value={sizeVar} onNewValue={setSizeVar} />
         <Question label={"What variable should be used to facet (or make separate graphs)?"} value={facetVar} onNewValue={setFacetVar} />
-        <div>
+        <div className="question">
             <label>How should the <i>x</i> axis be scaled?</label>
             <select value={xAxisScale} onChange={e => setXAxisScale(e.target.value)}>
                 <option value="linear">Linear</option>
                 <option value="scale_x_log10">{`Logarithmic (Base 10)`}</option>
             </select>
         </div>
-        <div>
+        <div className="question">
             <label>How should the <i>y</i> axis be scaled?</label>
             <select value={yAxisScale} onChange={e => setYAxisScale(e.target.value)}>
                 <option value="linear">Linear</option>
