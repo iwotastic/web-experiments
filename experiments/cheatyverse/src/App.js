@@ -1,8 +1,8 @@
 import { Route, Routes } from "react-router";
 import { HashRouter } from "react-router-dom";
-import { BarChart } from "./builders/Barchart";
+import { BarChart } from "./builders/BarChart";
 import { Histogram } from "./builders/Histogram";
-import { LinePlot } from "./builders/Lineplot";
+import { LinePlot } from "./builders/LinePlot";
 import { Scatterplot } from "./builders/Scatterplot";
 import { Homepage } from "./Homepage";
 import { version } from "../package.json";
