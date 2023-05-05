@@ -1,0 +1,14 @@
+{
+  "name": "hnuh258x-unessay",
+  "version": "1.0.0",
+  "description": "My final project for HNUH258X at UMD, centering around how the web interacts with the idea of information and power.",
+  "scripts": {
+    "start": "parcel src/index.html",
+    "build": "parcel build --public-url /hnuh258x-unessay --no-cache src/index.html"
+  },
+  "author": "Ian Morrill",
+  "license": "MIT",
+  "dependencies": {
+    "parcel": "^2.8.3"
+  }
+}

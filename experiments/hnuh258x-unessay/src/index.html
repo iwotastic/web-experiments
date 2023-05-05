@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ian's HNUH258X Unessay</title>
+
+    <link rel="stylesheet" href="style.css">
+    <script type="module" src="script.js"></script>
+</head>
+<body>
+    <main>
+        <h1>Read the <i>Browser</i>, Read the <i>User</i></h1>
+        <p>
+            We use web browsers all the time, most of us probably interact with one multiple times every single day,
+            but what does your web browser tell about <i>you?</i> Step right up and click the button below to find out
+            what your web browser can tell about you, and more importantly what power this could give the sites you
+            use every day.
+        </p>
+        <div class="c2a">
+            <button id="read-btn">Read my Browser<i>!</i></button>
+        </div>
+        <div id="read-data" class="hide">
+            <p>
+                In the time that it took from you clicking the button above to this text appearing on your screen, a
+                script ran and determined the following information about your browser, computer, and possibly you...
+            </p>
+            <p>
+                You are using <span id="browser"></span> on a device running <span id="os"></span>, with a screen that
+                is <span id="width"></span> pixels by <span id="height"></span> pixels in size. Additionally, you have
+                this window <span id="window-status"></span>, which probably means that
+                <span id="window-status-expl"></span>. You also probably <span id="bookmarks"></span> the bookmarks bar
+                visible. Finally, it would appear that you have a <span id="gpu"></span> graphics card in your computer.
+            </p>
+            <div class="c2a">
+                <button id="how-btn">How Did You Do That<i>?</i></button>
+            </div>
+        </div>
+        <div id="how" class="hide">
+            <p>
+                The script that ran when you clicked on the first button analyzed information that your browser provides
+                freely for various features that may identify information about you. These features include: the kinds
+                of things your web browser supports doing, data about your screen size, and some data about how your
+                browser creates graphics. By correlating these features with known values for each browser and OS, this
+                site can figure out what browser and OS you are using and various information about it.
+            </p>
+            <p>
+                For the purpose of being an unessay, I intentionally limited the number of features I wanted to analyze.
+                However, websites that make use browser fingerprinting will generally use way more features in a way
+                that allows them to uniquely identfiy your browser even if you clear your cookies or turn on "Incognito
+                Mode."
+            </p>
+            <p>
+                To see how far trackers and advertisers can go, check out
+                <a target="_blank" href="https://amiunique.org/">amiunique.org</a> and
+                <a target="_blank" href="https://coveryourtracks.eff.org/">the EFF's Cover Your Tracks website</a>.
+                These two sites use way more metrics and features and can give you a detailed explanation of whether
+                your web browser is or is not unqiue.
+            </p>
+        </div>
+    </main>
+    <footer>
+        <p>By <a href="https://ianmorrill.com">Ian Morrill</a></p>
+    </footer>
+</body>
+</html>
